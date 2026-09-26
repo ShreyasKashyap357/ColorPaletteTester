@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Palette Tester</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      /* Light Mode Defaults */
+      --primary: #2563EB;
+      --secondary: #7C3AED;
+      --success: #059669;
+      --warning: #D97706;
+      --error: #DC2626;
+      --bg: #E0E7FF;
+      --surface: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --border: #A5B4FC;
+
+      /* Stored dark values (for toggle) */
+      --dark-primary: #60A5FA;
+      --dark-secondary: #A78BFA;
+      --dark-success: #34D399;
+      --dark-warning: #FBBF24;
+      --dark-error: #F87171;
+      --dark-bg: #0B1120;
+      --dark-surface: #1E293B;
+      --dark-text-primary: #F8FAFC;
+      --dark-text-secondary: #94A3B8;
+      --dark-border: #475569;
+
+      /* Current applied values (start as light) */
+      --c-primary: var(--primary);
+      --c-secondary: var(--secondary);
+      --c-success: var(--success);
+      --c-warning: var(--warning);
+      --c-error: var(--error);
+      --c-bg: var(--bg);
+      --c-surface: var(--surface);
+      --c-text-primary: var(--text-primary);
+      --c-text-secondary: var(--text-secondary);
+      --c-border: var(--border);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ========== EDITOR MODE ========== */
+    #editor {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .editor-header {
+      margin-bottom: 1.75rem;
+    }
+
+    .editor-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .editor-header p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    /* Import Section */
+    .import-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.35rem;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      margin-bottom: 1.75rem;
+    }
+
+    .import-section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .import-section .hint {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+
+    .import-section textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+      background: #f8fafc;
+      margin-bottom: 0.85rem;
+    }
+
+    .import-section textarea:focus {
+      outline: 2px solid #2563eb;
+      outline-offset: 1px;
+    }
+
+    .import-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .file-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .file-label:hover {
+      background: #f8fafc;
+    }
+
+    .file-label input {
+      display: none;
+    }
+
+    .import-status {
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .import-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+
+    .import-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .import-status.info {
+      display: block;
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .color-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .color-group {
+      background: white;
+      border-radius: 12px;
+      padding: 1.25rem;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .color-group h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .color-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .color-row label {
+      flex: 1;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .color-row input[type="color"] {
+      width: 42px;
+      height: 36px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 2px;
+      background: white;
+    }
+
+    .color-row input[type="text"] {
+      width: 90px;
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+
+    .mode-label {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      width: 36px;
+      text-align: right;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+    }
+
+    .btn-sm {
+      padding: 0.55rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    /* ========== PREVIEW MODE ========== */
+    #preview {
+      display: none;
+      min-height: 100vh;
+      background: var(--c-bg);
+      color: var(--c-text-primary);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .preview-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--c-surface);
+      border-bottom: 1px solid var(--c-border);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .preview-topbar .left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .preview-topbar h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--c-border);
+      background: var(--c-surface);
+      color: var(--c-text-primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--c-bg);
+    }
+
+    .preview-content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* Sample UI Components */
+    .hero {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: var(--c-text-secondary);
+      margin-bottom: 1.25rem;
+      max-width: 520px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .ui-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1.15rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .ui-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Force Lucide SVGs to follow text color */
+    .ui-btn svg,
+    .card-icon svg,
+    .alert svg {
+      stroke: currentColor;
+      fill: none;
+      width: 1.1em;
+      height: 1.1em;
+      flex-shrink: 0;
+    }
+
+    .ui-btn-primary {
+      background: var(--c-primary) !important;
+      color: var(--c-on-primary) !important;
+    }
+
+    .ui-btn-secondary {
+      background: var(--c-secondary) !important;
+      color: var(--c-on-secondary) !important;
+    }
+
+    .ui-btn-outline {
+      background: transparent;
+      color: var(--c-primary);
+      border: 1.5px solid var(--c-primary);
+    }
+
+    .ui-btn-ghost {
+      background: transparent;
+      color: var(--c-text-secondary);
+      border: 1px solid var(--c-border);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 1.35rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Each card icon bg is set inline; text/icon color is set via data attribute or JS.
+       Fallback to white; specific ones overridden below via CSS variables. */
+    .card-icon {
+      color: #ffffff;
+    }
+    .card-icon svg {
+      stroke: currentColor;
+      color: currentColor;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      color: var(--c-text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: color-mix(in srgb, var(--c-success) 18%, transparent);
+      color: var(--c-success);
+    }
+
+    .badge-warning {
+      background: color-mix(in srgb, var(--c-warning) 18%, transparent);
+      color: var(--c-warning);
+    }
+
+    .badge-error {
+      background: color-mix(in srgb, var(--c-error) 18%, transparent);
+      color: var(--c-error);
+    }
+
+    .badge-primary {
+      background: color-mix(in srgb, var(--c-primary) 18%, transparent);
+      color: var(--c-primary);
+    }
+
+    .form-section {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      color: var(--c-text-secondary);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--c-border);
+      background: var(--c-bg);
+      color: var(--c-text-primary);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: 2px solid var(--c-primary);
+      outline-offset: 1px;
+    }
+
+    .alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid;
+      margin-bottom: 1rem;
+    }
+
+    .alert-success {
+      background: color-mix(in srgb, var(--c-success) 12%, transparent);
+      border-color: color-mix(in srgb, var(--c-success) 35%, transparent);
+      color: var(--c-success);
+    }
+
+    .alert-warning {
+      background: color-mix(in srgb, var(--c-warning) 12%, transparent);
+      border-color: color-mix(in srgb, var(--c-warning) 35%, transparent);
+      color: var(--c-warning);
+    }
+
+    .alert-error {
+      background: color-mix(in srgb, var(--c-error) 12%, transparent);
+      border-color: color-mix(in srgb, var(--c-error) 35%, transparent);
+      color: var(--c-error);
+    }
+
+    .alert p {
+      font-size: 0.9rem;
+      color: var(--c-text-primary);
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--c-text-secondary);
+      font-size: 0.85rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- ========== EDITOR ========== -->
+  <div id="editor">
+    <div class="editor-header">
+      <h1>Color Palette Tester</h1>
+      <p>Import from a table, CSS, JSON or any text → tweak colors → press <strong>View Preview</strong>.</p>
+    </div>
+
+    <!-- IMPORT -->
+    <div class="import-section">
+      <h2><i data-lucide="upload" style="width:18px;height:18px"></i> Import Colors</h2>
+      <p class="hint">
+        Paste a markdown table, CSS variables, JSON, key:value pairs, CSV — order doesn’t matter.
+        Or upload a <code>.txt</code> <code>.md</code> <code>.css</code> <code>.json</code> <code>.csv</code> file.
+      </p>
+      <textarea id="import-text" placeholder="Paste anything here…
+
+Examples that work:
+
+| Token              | Light Mode  | Dark Mode |
+| Primary Accent     | #2563EB     | #60A5FA   |
+| Background Base    | #E0E7FF     | #0B1120   |
+
+--primary: #2563EB;
+--dark-primary: #60A5FA;
+
+{ &quot;primary&quot;: &quot;#2563EB&quot;, &quot;dark-primary&quot;: &quot;#60A5FA&quot; }
+
+primary: #2563EB
+dark primary #60A5FA"></textarea>
+
+      <div class="import-actions">
+        <button class="btn btn-primary btn-sm" id="btn-parse">
+          <i data-lucide="wand-2" style="width:16px;height:16px"></i>
+          Parse &amp; Apply
+        </button>
+        <label class="file-label">
+          <i data-lucide="file-up" style="width:16px;height:16px"></i>
+          Upload file
+          <input type="file" id="file-input" accept=".txt,.md,.css,.json,.csv,.tsv,.html" />
+        </label>
+        <button class="btn btn-secondary btn-sm" id="btn-clear-import">
+          Clear
+        </button>
+      </div>
+      <div id="import-status" class="import-status"></div>
+    </div>
+
+    <div class="color-grid">
+      <!-- Accents -->
+      <div class="color-group">
+        <h3>Accents</h3>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Primary Accent</label>
+          <input type="color" id="primary" value="#2563EB" data-token="primary" />
+          <input type="text" value="#2563EB" data-for="primary" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Primary Accent</label>
+          <input type="color" id="dark-primary" value="#60A5FA" data-token="dark-primary" />
+          <input type="text" value="#60A5FA" data-for="dark-primary" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Secondary Accent</label>
+          <input type="color" id="secondary" value="#7C3AED" data-token="secondary" />
+          <input type="text" value="#7C3AED" data-for="secondary" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Secondary Accent</label>
+          <input type="color" id="dark-secondary" value="#A78BFA" data-token="dark-secondary" />
+          <input type="text" value="#A78BFA" data-for="dark-secondary" />
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="color-group">
+        <h3>Status Colors</h3>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Success</label>
+          <input type="color" id="success" value="#059669" data-token="success" />
+          <input type="text" value="#059669" data-for="success" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Success</label>
+          <input type="color" id="dark-success" value="#34D399" data-token="dark-success" />
+          <input type="text" value="#34D399" data-for="dark-success" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Warning</label>
+          <input type="color" id="warning" value="#D97706" data-token="warning" />
+          <input type="text" value="#D97706" data-for="warning" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Warning</label>
+          <input type="color" id="dark-warning" value="#FBBF24" data-token="dark-warning" />
+          <input type="text" value="#FBBF24" data-for="dark-warning" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Error</label>
+          <input type="color" id="error" value="#DC2626" data-token="error" />
+          <input type="text" value="#DC2626" data-for="error" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Error</label>
+          <input type="color" id="dark-error" value="#F87171" data-token="dark-error" />
+          <input type="text" value="#F87171" data-for="dark-error" />
+        </div>
+      </div>
+
+      <!-- Surfaces -->
+      <div class="color-group">
+        <h3>Backgrounds & Surfaces</h3>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Background Base</label>
+          <input type="color" id="bg" value="#E0E7FF" data-token="bg" />
+          <input type="text" value="#E0E7FF" data-for="bg" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Background Base</label>
+          <input type="color" id="dark-bg" value="#0B1120" data-token="dark-bg" />
+          <input type="text" value="#0B1120" data-for="dark-bg" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Surface / Cards</label>
+          <input type="color" id="surface" value="#FFFFFF" data-token="surface" />
+          <input type="text" value="#FFFFFF" data-for="surface" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Surface / Cards</label>
+          <input type="color" id="dark-surface" value="#1E293B" data-token="dark-surface" />
+          <input type="text" value="#1E293B" data-for="dark-surface" />
+        </div>
+      </div>
+
+      <!-- Text & Borders -->
+      <div class="color-group">
+        <h3>Text & Borders</h3>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Text Primary</label>
+          <input type="color" id="text-primary" value="#0F172A" data-token="text-primary" />
+          <input type="text" value="#0F172A" data-for="text-primary" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Text Primary</label>
+          <input type="color" id="dark-text-primary" value="#F8FAFC" data-token="dark-text-primary" />
+          <input type="text" value="#F8FAFC" data-for="dark-text-primary" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Text Secondary</label>
+          <input type="color" id="text-secondary" value="#475569" data-token="text-secondary" />
+          <input type="text" value="#475569" data-for="text-secondary" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Text Secondary</label>
+          <input type="color" id="dark-text-secondary" value="#94A3B8" data-token="dark-text-secondary" />
+          <input type="text" value="#94A3B8" data-for="dark-text-secondary" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Light</span>
+          <label>Borders & Dividers</label>
+          <input type="color" id="border" value="#A5B4FC" data-token="border" />
+          <input type="text" value="#A5B4FC" data-for="border" />
+        </div>
+        <div class="color-row">
+          <span class="mode-label">Dark</span>
+          <label>Borders & Dividers</label>
+          <input type="color" id="dark-border" value="#475569" data-token="dark-border" />
+          <input type="text" value="#475569" data-for="dark-border" />
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="btn-view">
+        <i data-lucide="eye"></i>
+        View Preview
+      </button>
+      <button class="btn btn-secondary" id="btn-reset">
+        <i data-lucide="rotate-ccw"></i>
+        Reset to Defaults
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== PREVIEW ========== -->
+  <div id="preview">
+    <div class="preview-topbar">
+      <div class="left">
+        <button class="icon-btn" id="btn-back" title="Back to editor">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <h2>Live Preview</h2>
+      </div>
+      <button class="icon-btn" id="btn-theme" title="Toggle light / dark">
+        <i data-lucide="sun" id="theme-icon"></i>
+      </button>
+    </div>
+
+    <div class="preview-content">
+      <section class="hero">
+        <h1>Welcome to your app</h1>
+        <p>This is a sample hero section using your Background, Surface, Primary text and Secondary text tokens. Adjust colors in the editor and come back to see the difference.</p>
+        <div class="btn-row">
+          <button class="ui-btn ui-btn-primary">
+            <i data-lucide="rocket"></i>
+            Get Started
+          </button>
+          <button class="ui-btn ui-btn-secondary">
+            <i data-lucide="sparkles"></i>
+            Secondary Action
+          </button>
+          <button class="ui-btn ui-btn-outline">
+            Outline Button
+          </button>
+          <button class="ui-btn ui-btn-ghost">
+            Ghost Button
+          </button>
+        </div>
+      </section>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background: var(--c-primary); color: var(--c-on-primary)">
+              <i data-lucide="zap" style="width:18px;height:18px"></i>
+            </div>
+            <h3>Primary Card</h3>
+          </div>
+          <p>Uses Surface background, Border color, Primary accent for the icon, and secondary text for the description.</p>
+          <span class="badge badge-primary">Primary</span>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background: var(--c-success); color: var(--c-on-success)">
+              <i data-lucide="check-circle" style="width:18px;height:18px"></i>
+            </div>
+            <h3>Success State</h3>
+          </div>
+          <p>Everything looks healthy. The badge and icon use the Success token so you can judge contrast and saturation.</p>
+          <span class="badge badge-success">Completed</span>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background: var(--c-warning); color: var(--c-on-warning)">
+              <i data-lucide="alert-triangle" style="width:18px;height:18px"></i>
+            </div>
+            <h3>Warning State</h3>
+          </div>
+          <p>Something needs attention. Check whether the Warning color feels distinct enough from Error and Success.</p>
+          <span class="badge badge-warning">Needs review</span>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background: var(--c-error); color: var(--c-on-error)">
+              <i data-lucide="x-circle" style="width:18px;height:18px"></i>
+            </div>
+            <h3>Error State</h3>
+          </div>
+          <p>Something went wrong. The Error token should stand out clearly against both the Surface and Background.</p>
+          <span class="badge badge-error">Failed</span>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <i data-lucide="check-circle" style="flex-shrink:0;margin-top:2px"></i>
+        <div>
+          <strong>Success</strong>
+          <p>Your changes have been saved successfully. This alert uses a tinted Success background.</p>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <i data-lucide="alert-triangle" style="flex-shrink:0;margin-top:2px"></i>
+        <div>
+          <strong>Warning</strong>
+          <p>You have unsaved changes. Make sure the Warning color remains readable on the surface.</p>
+        </div>
+      </div>
+
+      <div class="alert alert-error">
+        <i data-lucide="x-circle" style="flex-shrink:0;margin-top:2px"></i>
+        <div>
+          <strong>Error</strong>
+          <p>Unable to connect to the server. The Error token should feel urgent but not overwhelming.</p>
+        </div>
+      </div>
+
+      <section class="form-section">
+        <h3>Sample Form</h3>
+        <div class="form-group">
+          <label>Full name</label>
+          <input type="text" placeholder="Jane Doe" value="Alex Rivera" />
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" placeholder="you@example.com" value="alex@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select>
+            <option>Product Designer</option>
+            <option>Frontend Engineer</option>
+            <option selected>Full-stack Developer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea rows="3" placeholder="Any additional notes…">Looking good so far. The indigo background feels soft and modern.</textarea>
+        </div>
+        <div class="btn-row" style="margin-top:1.25rem">
+          <button class="ui-btn ui-btn-primary">
+            <i data-lucide="save"></i>
+            Save changes
+          </button>
+          <button class="ui-btn ui-btn-ghost">Cancel</button>
+        </div>
+      </section>
+
+      <p class="footer-note">
+        Toggle the sun / moon icon in the top-right to switch between Light and Dark modes.<br />
+        Use the back arrow to return to the color editor and keep iterating.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    let isDark = false;
+
+    const defaults = {
+      primary: "#2563EB",
+      secondary: "#7C3AED",
+      success: "#059669",
+      warning: "#D97706",
+      error: "#DC2626",
+      bg: "#E0E7FF",
+      surface: "#FFFFFF",
+      "text-primary": "#0F172A",
+      "text-secondary": "#475569",
+      border: "#A5B4FC",
+      "dark-primary": "#60A5FA",
+      "dark-secondary": "#A78BFA",
+      "dark-success": "#34D399",
+      "dark-warning": "#FBBF24",
+      "dark-error": "#F87171",
+      "dark-bg": "#0B1120",
+      "dark-surface": "#1E293B",
+      "dark-text-primary": "#F8FAFC",
+      "dark-text-secondary": "#94A3B8",
+      "dark-border": "#475569"
+    };
+
+    // Token name aliases (normalized → our key)
+    // Order matters: more specific first
+    const aliases = [
+      // dark variants first so "dark primary" matches before "primary"
+      { re: /dark[-_\s]?primary|primary[-_\s]?dark|primary\s*accent.*dark|dark.*primary\s*accent/i, key: "dark-primary" },
+      { re: /dark[-_\s]?secondary|secondary[-_\s]?dark|secondary\s*accent.*dark|dark.*secondary\s*accent/i, key: "dark-secondary" },
+      { re: /dark[-_\s]?success|success[-_\s]?dark/i, key: "dark-success" },
+      { re: /dark[-_\s]?warning|warning[-_\s]?dark/i, key: "dark-warning" },
+      { re: /dark[-_\s]?error|error[-_\s]?dark/i, key: "dark-error" },
+      { re: /dark[-_\s]?(bg|background)|background[-_\s]?base.*dark|dark.*background/i, key: "dark-bg" },
+      { re: /dark[-_\s]?(surface|card)|surface.*dark|card.*dark/i, key: "dark-surface" },
+      { re: /dark[-_\s]?text[-_\s]?primary|text[-_\s]?primary.*dark|dark.*text[-_\s]?primary/i, key: "dark-text-primary" },
+      { re: /dark[-_\s]?text[-_\s]?secondary|text[-_\s]?secondary.*dark|dark.*text[-_\s]?secondary/i, key: "dark-text-secondary" },
+      { re: /dark[-_\s]?(border|divider)|border.*dark|divider.*dark/i, key: "dark-border" },
+
+      // light / default
+      { re: /primary\s*accent|primary(?!.*dark)/i, key: "primary" },
+      { re: /secondary\s*accent|secondary(?!.*dark)/i, key: "secondary" },
+      { re: /success(?!.*dark)/i, key: "success" },
+      { re: /warning(?!.*dark)/i, key: "warning" },
+      { re: /error(?!.*dark)/i, key: "error" },
+      { re: /background\s*base|background(?!.*dark)|(?<!dark[-_\s])\bbg\b/i, key: "bg" },
+      { re: /surface\s*\/?\s*cards?|surface(?!.*dark)|cards?(?!.*dark)/i, key: "surface" },
+      { re: /text\s*primary(?!.*dark)/i, key: "text-primary" },
+      { re: /text\s*secondary(?!.*dark)/i, key: "text-secondary" },
+      { re: /borders?\s*&?\s*dividers?|borders?(?!.*dark)|dividers?(?!.*dark)/i, key: "border" }
+    ];
+
+    const HEX_RE = /#(?:[0-9a-fA-F]{3,4}){1,2}\b|rgb\s*\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|rgba\s*\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)/gi;
+
+    function normalizeHex(val) {
+      if (!val) return null;
+      val = val.trim();
+      // rgb/rgba → skip for simplicity, only accept hex for now
+      if (val.startsWith("rgb")) return null;
+      if (!val.startsWith("#")) val = "#" + val;
+      // expand 3-digit
+      if (/^#[0-9a-fA-F]{3}$/.test(val)) {
+        val = "#" + val[1]+val[1] + val[2]+val[2] + val[3]+val[3];
+      }
+      if (/^#[0-9a-fA-F]{6}$/.test(val)) return val.toUpperCase();
+      return null;
+    }
+
+    function matchToken(text) {
+      for (const a of aliases) {
+        if (a.re.test(text)) return a.key;
+      }
+      return null;
+    }
+
+    function parseInput(raw) {
+      const found = {}; // key → hex
+      const text = raw.trim();
+      if (!text) return found;
+
+      // 1) Try JSON
+      try {
+        const obj = JSON.parse(text);
+        if (typeof obj === "object" && obj !== null) {
+          for (const [k, v] of Object.entries(obj)) {
+            const key = matchToken(k) || (defaults[k] !== undefined ? k : null);
+            const hex = normalizeHex(String(v));
+            if (key && hex) found[key] = hex;
+          }
+          if (Object.keys(found).length) return found;
+        }
+      } catch (_) {}
+
+      // 2) Line-by-line / table / CSS / key-value
+      const lines = text.split(/\r?\n/);
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith("---") || /^\|?\s*-+\s*\|/.test(trimmed)) continue;
+
+        // Collect all hexes on the line
+        const hexes = [...trimmed.matchAll(HEX_RE)].map(m => normalizeHex(m[0])).filter(Boolean);
+        if (!hexes.length) continue;
+
+        // Token name = everything before first hex (or whole line cleaned)
+        let namePart = trimmed;
+        const firstHexIdx = trimmed.search(HEX_RE);
+        if (firstHexIdx > 0) namePart = trimmed.slice(0, firstHexIdx);
+
+        // Clean markdown table pipes
+        namePart = namePart.replace(/\|/g, " ").replace(/\s+/g, " ").trim();
+
+        // Special case: markdown table with Light | Dark columns
+        // e.g. | Primary Accent | #2563EB | #60A5FA |
+        if (hexes.length >= 2) {
+          const lightKey = matchToken(namePart);
+          if (lightKey && !lightKey.startsWith("dark-")) {
+            found[lightKey] = hexes[0];
+            const darkKey = "dark-" + lightKey;
+            if (defaults[darkKey] !== undefined) {
+              found[darkKey] = hexes[1];
+            }
+            continue;
+          }
+        }
+
+        // Single (or first) hex → match token name
+        const key = matchToken(namePart);
+        if (key) {
+          found[key] = hexes[0];
+        } else {
+          // Try CSS var style: --primary: #xxx or primary: #xxx
+          const cssMatch = trimmed.match(/(?:--)?([a-zA-Z0-9_-]+)\s*[:=]\s*(#[0-9a-fA-F]{3,8})/i);
+          if (cssMatch) {
+            const k = matchToken(cssMatch[1]) || (defaults[cssMatch[1]] !== undefined ? cssMatch[1] : null);
+            const hex = normalizeHex(cssMatch[2]);
+            if (k && hex) found[k] = hex;
+          }
+        }
+      }
+
+      // 3) Fallback: any remaining key: #hex patterns anywhere
+      const globalKV = [...text.matchAll(/(?:--)?([a-zA-Z][a-zA-Z0-9_-]*)\s*[:=]\s*(#[0-9a-fA-F]{3,8})/gi)];
+      for (const m of globalKV) {
+        const k = matchToken(m[1]) || (defaults[m[1]] !== undefined ? m[1] : null);
+        const hex = normalizeHex(m[2]);
+        if (k && hex && !found[k]) found[k] = hex;
+      }
+
+      return found;
+    }
+
+    function applyParsed(found) {
+      let count = 0;
+      for (const [key, hex] of Object.entries(found)) {
+        const picker = document.getElementById(key);
+        const textInput = document.querySelector(`input[data-for="${key}"]`);
+        if (picker && textInput) {
+          picker.value = hex;
+          textInput.value = hex;
+          count++;
+        }
+      }
+      applyColors();
+      return count;
+    }
+
+    function showStatus(msg, type) {
+      const el = document.getElementById("import-status");
+      el.textContent = msg;
+      el.className = "import-status " + type;
+    }
+
+    // ---------- Core color apply ----------
+    function getTokenValue(key) {
+      const el = document.getElementById(key);
+      return el ? el.value : (defaults[key] || "#000000");
+    }
+
+    function applyColors() {
+      // Keep raw light/dark tokens in sync with inputs
+      Object.keys(defaults).forEach(key => {
+        const el = document.getElementById(key);
+        if (el) root.style.setProperty(`--${key}`, el.value);
+      });
+      updateThemeVars();
+    }
+
+    // Relative luminance (0 = black, 1 = white)
+    function luminance(hex) {
+      const c = hex.replace("#", "");
+      const r = parseInt(c.slice(0, 2), 16) / 255;
+      const g = parseInt(c.slice(2, 4), 16) / 255;
+      const b = parseInt(c.slice(4, 6), 16) / 255;
+      const toLin = (v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+      return 0.2126 * toLin(r) + 0.7152 * toLin(g) + 0.0722 * toLin(b);
+    }
+
+    // Pick black or white text for best contrast on a given bg
+    function contrastText(bgHex) {
+      return luminance(bgHex) > 0.45 ? "#0F172A" : "#FFFFFF";
+    }
+
+    function updateThemeVars() {
+      // Read directly from the color inputs (more reliable than getComputedStyle)
+      const keys = ["primary","secondary","success","warning","error","bg","surface","text-primary","text-secondary","border"];
+      keys.forEach(k => {
+        const sourceKey = isDark ? `dark-${k}` : k;
+        const val = getTokenValue(sourceKey);
+        root.style.setProperty(`--c-${k}`, val);
+      });
+
+      // Adaptive button/icon text so light accents don't get washed-out white icons
+      const primary = getTokenValue(isDark ? "dark-primary" : "primary");
+      const secondary = getTokenValue(isDark ? "dark-secondary" : "secondary");
+      const success = getTokenValue(isDark ? "dark-success" : "success");
+      const warning = getTokenValue(isDark ? "dark-warning" : "warning");
+      const error = getTokenValue(isDark ? "dark-error" : "error");
+
+      root.style.setProperty("--c-on-primary", contrastText(primary));
+      root.style.setProperty("--c-on-secondary", contrastText(secondary));
+      root.style.setProperty("--c-on-success", contrastText(success));
+      root.style.setProperty("--c-on-warning", contrastText(warning));
+      root.style.setProperty("--c-on-error", contrastText(error));
+    }
+
+    // Sync pickers ↔ text
+    document.querySelectorAll('input[type="color"]').forEach(picker => {
+      const text = document.querySelector(`input[data-for="${picker.id}"]`);
+      picker.addEventListener("input", () => {
+        text.value = picker.value.toUpperCase();
+        applyColors();
+      });
+      text.addEventListener("change", () => {
+        let val = text.value.trim();
+        if (!val.startsWith("#")) val = "#" + val;
+        const hex = normalizeHex(val);
+        if (hex) {
+          picker.value = hex;
+          text.value = hex;
+          applyColors();
+        }
+      });
+    });
+
+    // Import actions
+    document.getElementById("btn-parse").addEventListener("click", () => {
+      const raw = document.getElementById("import-text").value;
+      const found = parseInput(raw);
+      const count = applyParsed(found);
+      if (count > 0) {
+        showStatus(`Applied ${count} color${count > 1 ? "s" : ""}. You can still tweak them below.`, "success");
+      } else {
+        showStatus("No matching colors found. Try a markdown table, CSS variables, or JSON with token names.", "error");
+      }
+    });
+
+    document.getElementById("btn-clear-import").addEventListener("click", () => {
+      document.getElementById("import-text").value = "";
+      document.getElementById("import-status").className = "import-status";
+    });
+
+    document.getElementById("file-input").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.getElementById("import-text").value = reader.result;
+        showStatus(`Loaded “${file.name}”. Click Parse & Apply.`, "info");
+      };
+      reader.onerror = () => showStatus("Could not read the file.", "error");
+      reader.readAsText(file);
+      e.target.value = ""; // allow re-upload same file
+    });
+
+    // View / Back
+    document.getElementById("btn-view").addEventListener("click", () => {
+      applyColors();
+      document.getElementById("editor").style.display = "none";
+      document.getElementById("preview").style.display = "block";
+      lucide.createIcons();
+    });
+
+    document.getElementById("btn-back").addEventListener("click", () => {
+      document.getElementById("preview").style.display = "none";
+      document.getElementById("editor").style.display = "block";
+      lucide.createIcons();
+    });
+
+    // Theme toggle
+    document.getElementById("btn-theme").addEventListener("click", () => {
+      isDark = !isDark;
+      updateThemeVars();
+      // Force a reflow so CSS variables are picked up before re-rendering icons
+      void document.getElementById("preview").offsetHeight;
+      const icon = document.getElementById("theme-icon");
+      icon.setAttribute("data-lucide", isDark ? "moon" : "sun");
+      lucide.createIcons();
+    });
+
+    // Reset
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      Object.entries(defaults).forEach(([key, val]) => {
+        const picker = document.getElementById(key);
+        const text = document.querySelector(`input[data-for="${key}"]`);
+        if (picker) {
+          picker.value = val;
+          text.value = val;
+        }
+      });
+      applyColors();
+      showStatus("Reset to original defaults.", "info");
+    });
+
+    // Init
+    applyColors();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
