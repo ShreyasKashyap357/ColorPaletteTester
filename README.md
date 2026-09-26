@@ -51,11 +51,11 @@ Single HTML file • No build step • Works offline after first load
 | Success            | #059669     | #34D399   |
 | Warning            | #D97706     | #FBBF24   |
 | Error              | #DC2626     | #F87171   |
-| Background Base    | #E0E7FF     | #0B1120   |
+| Background Base    | #EEF2FF     | #0B1120   |
 | Surface / Cards    | #FFFFFF     | #1E293B   |
 | Text Primary       | #0F172A     | #F8FAFC   |
 | Text Secondary     | #475569     | #94A3B8   |
-| Borders & Dividers | #A5B4FC     | #475569   |
+| Borders & Dividers | #C7D2FE     | #475569   |
 ```
 
 Other formats that work:
@@ -86,11 +86,11 @@ Background Base #E0E7FF #0B1120
 | Success            | `#059669`     | `#34D399`    |
 | Warning            | `#D97706`     | `#FBBF24`    |
 | Error              | `#DC2626`     | `#F87171`    |
-| Background Base    | `#E0E7FF`     | `#0B1120`    |
+| Background Base    | `#EEF2FF`     | `#0B1120`    |
 | Surface / Cards    | `#FFFFFF`     | `#1E293B`    |
 | Text Primary       | `#0F172A`     | `#F8FAFC`    |
 | Text Secondary     | `#475569`     | `#94A3B8`    |
-| Borders & Dividers | `#A5B4FC`     | `#475569`    |
+| Borders & Dividers | `#C7D2FE`     | `#475569`    |
 
 ---
 
