@@ -597,6 +597,165 @@
       margin-bottom: 0.15rem;
     }
 
+    .demo-shell {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .demo-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--c-border);
+      background: color-mix(in srgb, var(--c-bg) 70%, var(--c-surface));
+    }
+
+    .demo-nav a {
+      color: var(--c-text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid transparent;
+    }
+
+    .demo-nav a:hover,
+    .demo-nav a:focus-visible {
+      color: var(--c-primary);
+      border-color: var(--c-border);
+      outline: none;
+      background: color-mix(in srgb, var(--c-primary) 10%, transparent);
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      padding: 1rem 1rem 0;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--c-border);
+      background: transparent;
+      color: var(--c-text-secondary);
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab-btn:hover {
+      color: var(--c-primary);
+      border-color: var(--c-primary);
+    }
+
+    .tab-btn.is-active {
+      background: color-mix(in srgb, var(--c-primary) 14%, transparent);
+      color: var(--c-primary);
+      border-color: var(--c-primary);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--c-border);
+      border-radius: 10px;
+      overflow-x: auto;
+      background: var(--c-bg);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 520px;
+      font-size: 0.86rem;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--c-border);
+      text-align: left;
+    }
+
+    .data-table th {
+      color: var(--c-text-secondary);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: color-mix(in srgb, var(--c-surface) 75%, var(--c-bg));
+    }
+
+    .data-table td {
+      color: var(--c-text-primary);
+      background: var(--c-surface);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .metric-card {
+      border: 1px solid var(--c-border);
+      border-radius: 10px;
+      padding: 0.95rem;
+      background: var(--c-bg);
+    }
+
+    .metric-card h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .metric-card ul {
+      list-style: none;
+      margin-bottom: 0.8rem;
+    }
+
+    .metric-card li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      color: var(--c-text-secondary);
+      font-size: 0.84rem;
+    }
+
+    .metric-card strong {
+      color: var(--c-text-primary);
+    }
+
+    .ui-link {
+      color: var(--c-primary);
+      text-decoration-color: color-mix(in srgb, var(--c-primary) 35%, transparent);
+      text-underline-offset: 2px;
+      font-weight: 600;
+    }
+
+    .ui-link:hover,
+    .ui-link:focus-visible {
+      color: var(--c-secondary);
+      text-decoration-color: var(--c-secondary);
+      outline: none;
+    }
+
+    @media (max-width: 860px) {
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .footer-note {
       text-align: center;
       color: var(--c-text-secondary);
@@ -822,7 +981,7 @@ dark primary #60A5FA"></textarea>
     </div>
 
     <div class="preview-content">
-      <section class="hero">
+      <section class="hero" id="overview">
         <h1>Welcome to your app</h1>
         <p>This is a sample hero section using your Background, Surface, Primary text and Secondary text tokens. Adjust colors in the editor and come back to see the difference.</p>
         <div class="btn-row">
@@ -843,7 +1002,74 @@ dark primary #60A5FA"></textarea>
         </div>
       </section>
 
-      <div class="cards">
+      <section class="demo-shell" aria-label="Navigation and data preview">
+        <nav class="demo-nav" aria-label="Primary navigation">
+          <a href="#overview">Overview</a>
+          <a href="#projects">Projects</a>
+          <a href="#billing">Billing</a>
+          <a href="#settings">Settings</a>
+        </nav>
+
+        <div class="tabs" role="tablist" aria-label="Dashboard tabs">
+          <button class="tab-btn is-active" role="tab" aria-selected="true">All projects</button>
+          <button class="tab-btn" role="tab" aria-selected="false">In progress</button>
+          <button class="tab-btn" role="tab" aria-selected="false">Archived</button>
+        </div>
+
+        <div class="demo-grid">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Owner</th>
+                  <th>Status</th>
+                  <th>Budget</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Onboarding revamp</td>
+                  <td>Alex Rivera</td>
+                  <td><span class="badge badge-success">On track</span></td>
+                  <td>$12,400</td>
+                </tr>
+                <tr>
+                  <td>Accessibility audit</td>
+                  <td>Jordan Lee</td>
+                  <td><span class="badge badge-warning">At risk</span></td>
+                  <td>$4,800</td>
+                </tr>
+                <tr>
+                  <td>Billing migration</td>
+                  <td>Priya Shah</td>
+                  <td><span class="badge badge-error">Blocked</span></td>
+                  <td>$9,100</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <aside class="metric-card" aria-label="Summary panel">
+            <h3>Quick summary</h3>
+            <ul>
+              <li><span>Total revenue</span> <strong>$82.3k</strong></li>
+              <li><span>Open tickets</span> <strong>14</strong></li>
+              <li><span>Team uptime</span> <strong style="color:var(--c-success)">99.9%</strong></li>
+            </ul>
+            <div class="alert alert-warning" style="margin-bottom:0.75rem">
+              <i data-lucide="bell" style="flex-shrink:0;margin-top:2px"></i>
+              <div>
+                <strong>Attention needed</strong>
+                <p>2 tasks are close to deadline. <a href="#projects" class="ui-link">Review priorities</a>.</p>
+              </div>
+            </div>
+            <button class="ui-btn ui-btn-outline">View full report</button>
+          </aside>
+        </div>
+      </section>
+
+      <div class="cards" id="projects">
         <div class="card">
           <div class="card-header">
             <div class="card-icon" style="background: var(--c-primary); color: var(--c-on-primary)">
@@ -913,7 +1139,7 @@ dark primary #60A5FA"></textarea>
         </div>
       </div>
 
-      <section class="form-section">
+      <section class="form-section" id="billing">
         <h3>Sample Form</h3>
         <div class="form-group">
           <label>Full name</label>
@@ -944,7 +1170,7 @@ dark primary #60A5FA"></textarea>
         </div>
       </section>
 
-      <p class="footer-note">
+      <p class="footer-note" id="settings">
         Toggle the sun / moon icon in the top-right to switch between Light and Dark modes.<br />
         Use the back arrow to return to the color editor and keep iterating.
       </p>
