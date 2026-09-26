@@ -603,6 +603,198 @@
       font-size: 0.85rem;
       margin-top: 2rem;
     }
+
+    /* Table */
+    .table-section {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .table-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    table.data-table th {
+      text-align: left;
+      padding: 0.7rem 0.85rem;
+      color: var(--c-text-secondary);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--c-border);
+      background: var(--c-bg);
+    }
+
+    table.data-table td {
+      padding: 0.75rem 0.85rem;
+      border-bottom: 1px solid var(--c-border);
+      color: var(--c-text-primary);
+    }
+
+    table.data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.data-table tr:hover td {
+      background: color-mix(in srgb, var(--c-primary) 6%, transparent);
+    }
+
+    /* Nav sample */
+    .nav-sample {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-sample .brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--c-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-sample .brand span {
+      color: var(--c-primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--c-text-secondary);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: color-mix(in srgb, var(--c-primary) 12%, transparent);
+      color: var(--c-primary);
+    }
+
+    /* List / checklist */
+    .list-section {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .list-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .checklist {
+      list-style: none;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--c-border);
+      color: var(--c-text-primary);
+      font-size: 0.95rem;
+    }
+
+    .checklist li:last-child {
+      border-bottom: none;
+    }
+
+    .checklist li .check {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1.5px solid var(--c-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .checklist li.done .check {
+      background: var(--c-success);
+      border-color: var(--c-success);
+    }
+
+    .checklist li .meta {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--c-text-secondary);
+    }
+
+    /* Divider sample */
+    .divider {
+      height: 1px;
+      background: var(--c-border);
+      margin: 1.5rem 0;
+    }
+
+    /* Stats row */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 12px;
+      padding: 1.15rem;
+    }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--c-text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--c-text-primary);
+    }
+
+    .stat-card .change {
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    .stat-card .change.up { color: var(--c-success); }
+    .stat-card .change.down { color: var(--c-error); }
   </style>
 </head>
 <body>
@@ -912,6 +1104,122 @@ dark primary #60A5FA"></textarea>
           <p>Unable to connect to the server. The Error token should feel urgent but not overwhelming.</p>
         </div>
       </div>
+
+      <!-- Nav -->
+      <nav class="nav-sample">
+        <div class="brand">
+          <i data-lucide="layers" style="width:20px;height:20px;color:var(--c-primary)"></i>
+          <span>AppName</span>
+        </div>
+        <div class="nav-links">
+          <a href="#" class="active">Dashboard</a>
+          <a href="#">Projects</a>
+          <a href="#">Team</a>
+          <a href="#">Settings</a>
+        </div>
+        <button class="ui-btn ui-btn-primary" style="padding:0.4rem 0.9rem;font-size:0.85rem">
+          <i data-lucide="plus"></i>
+          New
+        </button>
+      </nav>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-card">
+          <div class="label">Total users</div>
+          <div class="value">12,847</div>
+          <div class="change up">+12.4% this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Active sessions</div>
+          <div class="value">3,291</div>
+          <div class="change up">+5.1% today</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Error rate</div>
+          <div class="value">0.8%</div>
+          <div class="change down">−0.3% vs last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Avg. response</div>
+          <div class="value">142ms</div>
+          <div class="change up">−18ms</div>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <section class="table-section">
+        <h3>Sample Table</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Last active</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alex Rivera</td>
+              <td>Full-stack Developer</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td style="color:var(--c-text-secondary)">2 min ago</td>
+            </tr>
+            <tr>
+              <td>Jordan Lee</td>
+              <td>Product Designer</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td style="color:var(--c-text-secondary)">14 min ago</td>
+            </tr>
+            <tr>
+              <td>Sam Patel</td>
+              <td>Frontend Engineer</td>
+              <td><span class="badge badge-warning">Away</span></td>
+              <td style="color:var(--c-text-secondary)">1 hour ago</td>
+            </tr>
+            <tr>
+              <td>Casey Kim</td>
+              <td>Backend Engineer</td>
+              <td><span class="badge badge-error">Offline</span></td>
+              <td style="color:var(--c-text-secondary)">3 days ago</td>
+            </tr>
+            <tr>
+              <td>Riley Chen</td>
+              <td>QA Engineer</td>
+              <td><span class="badge badge-primary">Busy</span></td>
+              <td style="color:var(--c-text-secondary)">32 min ago</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Checklist -->
+      <section class="list-section">
+        <h3>Task List</h3>
+        <ul class="checklist">
+          <li class="done">
+            <span class="check"><i data-lucide="check" style="width:12px;height:12px"></i></span>
+            Set up color tokens
+            <span class="meta">Done</span>
+          </li>
+          <li class="done">
+            <span class="check"><i data-lucide="check" style="width:12px;height:12px"></i></span>
+            Build light and dark themes
+            <span class="meta">Done</span>
+          </li>
+          <li>
+            <span class="check"></span>
+            Review contrast on tables and forms
+            <span class="meta">Pending</span>
+          </li>
+          <li>
+            <span class="check"></span>
+            Ship palette to production
+            <span class="meta">Pending</span>
+          </li>
+        </ul>
+      </section>
 
       <section class="form-section">
         <h3>Sample Form</h3>
